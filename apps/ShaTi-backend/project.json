@@ -1,0 +1,19 @@
+{
+  "name": "backend",
+  "targets": {
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn dev",
+        "cwd": "apps/ShaTi-backend"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn build",
+        "cwd": "apps/ShaTi-backend"
+      }
+    }
+  }
+}

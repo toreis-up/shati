@@ -1,0 +1,26 @@
+{
+  "name": "types",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "ShaTi/libs/types/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/ShaTi/libs/types",
+        "main": "ShaTi/libs/types/src/index.ts",
+        "tsConfig": "ShaTi/libs/types/tsconfig.lib.json",
+        "assets": ["ShaTi/libs/types/*.md"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../../coverage/ShaTi/libs/types"
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "frontend",
+  "targets": {
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn dev",
+        "cwd": "apps/ShaTi-frontend"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn build",
+        "cwd": "apps/ShaTi-frontend"
+      }
+    }
+  }
+}

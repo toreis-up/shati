@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@ShaTi/types": ["ShaTi/libs/types/src/index.ts"]
+    }
+  }
+}
