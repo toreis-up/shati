@@ -3,7 +3,9 @@ import type { Timer, TimerId } from '@shati/types';
 
 type TimerResponse = Timer;
 
+
 export const useTimerStore = defineStore('timer', () => {
+  const config = useRuntimeConfig();
   const timer = ref<Timer>({
     id: '',
     name: '',
@@ -42,7 +44,7 @@ export const useTimerStore = defineStore('timer', () => {
 
   async function fetchTimer(timerId: TimerId) {
     const timerResponse = await $fetch<TimerResponse>(
-      `http://localhost:8787/timer/${timerId}`
+      `${config.public.apiBase}/timer/${timerId}`
     );
     timer.value = { ...timerResponse };
 
@@ -52,7 +54,7 @@ export const useTimerStore = defineStore('timer', () => {
   function connect(timerId: TimerId) {
     if (socket.value) socket.value.close();
     socket.value = new WebSocket(
-      `ws://127.0.0.1:8787/timer/${timerId}/connect`
+      `${config.public.apiBase}/timer/${timerId}/connect`
     );
 
     socket.value.onopen = () => {
@@ -85,7 +87,7 @@ export const useTimerStore = defineStore('timer', () => {
     if (!timer.value.id) {
       return;
     }
-    await fetch(`http://localhost:8787/timer/${timer.value.id}/start`, {
+    await fetch(`${config.public.apiBase}/timer/${timer.value.id}/start`, {
       method: 'POST',
     });
   }
@@ -95,7 +97,7 @@ export const useTimerStore = defineStore('timer', () => {
     if (!timer.value.id) {
       return;
     }
-    await fetch(`http://localhost:8787/timer/${timer.value.id}/stop`, {
+    await fetch(`${config.public.apiBase}/timer/${timer.value.id}/stop`, {
       method: 'POST',
     });
   }
@@ -105,7 +107,7 @@ export const useTimerStore = defineStore('timer', () => {
     if (!timer.value.id) {
       return;
     }
-    await fetch(`http://localhost:8787/timer/${timer.value.id}/pause`, {
+    await fetch(`${config.public.apiBase}/timer/${timer.value.id}/pause`, {
       method: 'POST',
     });
   }
@@ -115,7 +117,7 @@ export const useTimerStore = defineStore('timer', () => {
     if (!timer.value.id) {
       return;
     }
-    await fetch(`http://localhost:8787/timer/${timer.value.id}/resume`, {
+    await fetch(`${config.public.apiBase}/timer/${timer.value.id}/resume`, {
       method: 'POST',
     });
   }

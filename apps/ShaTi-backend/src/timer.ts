@@ -2,7 +2,6 @@ import { DurableObject } from 'cloudflare:workers';
 import type {
   DOTimer,
   Duration,
-  TimerWebSocketRequest,
   TimerOutputList,
   TimerId,
 } from '@shati/types';

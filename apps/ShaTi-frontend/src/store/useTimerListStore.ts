@@ -6,11 +6,12 @@ type TimerListResponse = {
 };
 
 export const useTimerListStore = defineStore('timerlist', () => {
+  const config = useRuntimeConfig();
   const timers = ref<Timer[]>([]);
 
   async function fetchTimers() {
     const timerResponse = await $fetch<TimerListResponse>(
-      `http://localhost:8787/timer`
+      `${config.public.apiBase}/timer`
     );
     timers.value = timerResponse.timers;
 

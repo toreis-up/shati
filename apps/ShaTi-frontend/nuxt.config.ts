@@ -4,4 +4,14 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   srcDir: 'src/',
   modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt'],
+  runtimeConfig: {
+    public: {
+      apiBase: 'http://localhost:8787',
+    },
+  },
+  nitro: {
+    prerender: {
+      autoSubfolderIndex: false,
+    },
+  },
 });
