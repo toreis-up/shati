@@ -1,7 +1,7 @@
 <template>
   <div class="grid justify-center content-center h-screen">
     <TimerTitle :title="timer.name" auto-scroll />
-    <TimerPageClock class="justify-self-center" :duration="timer.isRunning ? timer.isPausing ? timer.remainDuration : timerRemain : timer.duration" />
+    <TimerPageClock class="justify-self-center" :past="timer.endAt - now < 0" :duration="timer.isRunning ? timerRemain : timer.duration" />
     <div class="flex justify-around pt-5">
       <TimerPageBtn @on-click="timer.isRunning ? onStop() : onStart()">{{ timer.isRunning ? 'Stop' : 'Start' }}</TimerPageBtn>
       <TimerPageBtn @on-click="timer.isPausing ? onResume() : onPause()" :disabled="!timer.isRunning" outlined>{{ timer.isPausing ? 'Resume' : 'Pause' }}</TimerPageBtn>
@@ -22,8 +22,14 @@ import {ref} from 'vue'
 const now = ref(0)
 
 const timerRemain = computed(() => {
+  if (timer.isPausing) {
+    return {
+      minutes: timer.remainDuration.minutes,
+      seconds: Math.abs(timer.remainDuration?.seconds)
+    }
+  }
   return {
-    minutes: Math.floor((timer.endAt - now.value) / 60),
+    minutes: (timer.endAt - now.value) < 0 ? Math.ceil((timer.endAt - now.value)  / 60) : Math.floor((timer.endAt - now.value)  / 60),
     seconds: Math.abs((timer.endAt - now.value) % 60)
   }
 })

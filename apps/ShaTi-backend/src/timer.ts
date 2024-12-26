@@ -64,7 +64,7 @@ export class TimerDurableObjects extends DurableObject {
     //   }`
     // );
 
-    ws.send('{"maintain": "OK"}')
+    ws.send('{"maintain": "OK"}');
   }
 
   async webSocketClose(
@@ -81,7 +81,7 @@ export class TimerDurableObjects extends DurableObject {
       if (socketIdx > -1) {
         socketMap.splice(socketIdx, 1);
       }
-      
+
       if (socketMap.length === 0) {
         this.sockets.delete(timerId);
       } else {
@@ -145,15 +145,18 @@ export class TimerDurableObjects extends DurableObject {
   async startTimer(id: TimerId) {
     const cf_timer = await this.getTimer(id);
 
-    cf_timer.startAt = this.nowSecond()
-    cf_timer.endAt = this.nowSecond() + 60 * cf_timer.duration!.minutes + cf_timer.duration!.seconds;
+    cf_timer.startAt = this.nowSecond();
+    cf_timer.endAt =
+      this.nowSecond() +
+      60 * cf_timer.duration!.minutes +
+      cf_timer.duration!.seconds;
     cf_timer.isRunning = true;
     cf_timer.isPausing = false;
     await this.ctx.storage.put(id, cf_timer);
 
     await this.multicast(id, JSON.stringify(cf_timer));
 
-    return cf_timer
+    return cf_timer;
   }
 
   async stopTimer(id: TimerId) {
@@ -175,11 +178,14 @@ export class TimerDurableObjects extends DurableObject {
     const cf_timer = await this.getTimer(id);
 
     cf_timer.startAt = this.nowSecond();
-    cf_timer.endAt = this.nowSecond() + 60 * cf_timer.remainDuration!.minutes + cf_timer.remainDuration!.seconds;
+    cf_timer.endAt =
+      this.nowSecond() +
+      60 * cf_timer.remainDuration!.minutes +
+      cf_timer.remainDuration!.seconds;
     cf_timer.isPausing = false;
     await this.ctx.storage.put(id, cf_timer);
 
-    await this.multicast(id, JSON.stringify(cf_timer))
+    await this.multicast(id, JSON.stringify(cf_timer));
 
     return cf_timer;
   }
@@ -188,11 +194,14 @@ export class TimerDurableObjects extends DurableObject {
     const cf_timer = await this.getTimer(id);
 
     const remain = cf_timer.endAt! - this.nowSecond();
-    const remainObj = { minutes: Math.floor(remain / 60), seconds: remain % 60 }
-    cf_timer.remainDuration = remainObj
+    const remainObj = {
+      minutes: remain < 0 ? Math.ceil(remain / 60) : Math.floor(remain / 60),
+      seconds: remain % 60,
+    };
+    cf_timer.remainDuration = remainObj;
 
     cf_timer.startAt = undefined;
-    cf_timer.endAt = undefined
+    cf_timer.endAt = undefined;
     cf_timer.isPausing = true;
     await this.ctx.storage.put(id, cf_timer);
 

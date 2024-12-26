@@ -8,7 +8,7 @@
 import type { Duration } from '@shati/types';
 import type { PropType } from 'vue';
 
-const { duration, class: bindClass } = defineProps({
+const { past, duration, class: bindClass } = defineProps({
   duration: {
     type: Object as PropType<Duration>,
     default: () => ({
@@ -20,6 +20,10 @@ const { duration, class: bindClass } = defineProps({
     type: String,
     required: false,
   },
+  past: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 const classStr = computed(() => {
@@ -33,6 +37,9 @@ const durationStr = computed(() => {
 });
 
 const minutesStr = computed(() => {
+  if (duration.minutes === 0 && past) {
+    return '-0'
+  }
   return duration.minutes?.toString().padStart(2, '0') || '--';
 });
 
