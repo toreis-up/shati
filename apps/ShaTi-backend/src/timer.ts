@@ -58,16 +58,13 @@ export class TimerDurableObjects extends DurableObject {
   }
 
   async webSocketMessage(ws: WebSocket, message: ArrayBuffer | string) {
-    const ctx: TimerWebSocketRequest = JSON.parse(message.toString());
-    const timerId = ctx.id;
+    // ws.send(
+    //   `[Durable Object] msg ${message}, connections: ${
+    //     this.ctx.getWebSockets().length
+    //   }`
+    // );
 
-    ws.send(
-      `[Durable Object] msg ${message}, connections: ${
-        this.ctx.getWebSockets().length
-      }`
-    );
-
-    this.multicast(timerId, message.toString());
+    ws.send('{"maintain": "OK"}')
   }
 
   async webSocketClose(
@@ -124,9 +121,11 @@ export class TimerDurableObjects extends DurableObject {
     const newTimer: DOTimer = {
       name: name || 'no name timer',
       duration: duration,
+      remainDuration: undefined,
       startAt: undefined,
       endAt: undefined,
       isRunning: false,
+      isPausing: false,
     };
 
     const id = crypto.randomUUID();
@@ -136,10 +135,72 @@ export class TimerDurableObjects extends DurableObject {
     return { id, ...newTimer };
   }
 
-  async getTimer(id: string) {
+  async getTimer(id: TimerId) {
     const cf_timer = await this.ctx.storage.get<DOTimer>(id);
     const timer = { id, ...cf_timer };
 
     return timer;
+  }
+
+  async startTimer(id: TimerId) {
+    const cf_timer = await this.getTimer(id);
+
+    cf_timer.startAt = this.nowSecond()
+    cf_timer.endAt = this.nowSecond() + 60 * cf_timer.duration!.minutes + cf_timer.duration!.seconds;
+    cf_timer.isRunning = true;
+    cf_timer.isPausing = false;
+    await this.ctx.storage.put(id, cf_timer);
+
+    await this.multicast(id, JSON.stringify(cf_timer));
+
+    return cf_timer
+  }
+
+  async stopTimer(id: TimerId) {
+    const cf_timer = await this.getTimer(id);
+
+    cf_timer.startAt = undefined;
+    cf_timer.endAt = undefined;
+    cf_timer.isRunning = false;
+    cf_timer.isPausing = false;
+    cf_timer.remainDuration = undefined;
+    await this.ctx.storage.put(id, cf_timer);
+
+    await this.multicast(id, JSON.stringify(cf_timer));
+
+    return cf_timer;
+  }
+
+  async resumeTimer(id: TimerId) {
+    const cf_timer = await this.getTimer(id);
+
+    cf_timer.startAt = this.nowSecond();
+    cf_timer.endAt = this.nowSecond() + 60 * cf_timer.remainDuration!.minutes + cf_timer.remainDuration!.seconds;
+    cf_timer.isPausing = false;
+    await this.ctx.storage.put(id, cf_timer);
+
+    await this.multicast(id, JSON.stringify(cf_timer))
+
+    return cf_timer;
+  }
+
+  async pauseTimer(id: TimerId) {
+    const cf_timer = await this.getTimer(id);
+
+    const remain = cf_timer.endAt! - this.nowSecond();
+    const remainObj = { minutes: Math.floor(remain / 60), seconds: remain % 60 }
+    cf_timer.remainDuration = remainObj
+
+    cf_timer.startAt = undefined;
+    cf_timer.endAt = undefined
+    cf_timer.isPausing = true;
+    await this.ctx.storage.put(id, cf_timer);
+
+    await this.multicast(id, JSON.stringify(cf_timer));
+    return cf_timer;
+  }
+
+  nowSecond() {
+    return Math.floor(Date.now() / 1000);
   }
 }

@@ -12,9 +12,11 @@ export type TimerId = string;
 export interface DOTimer {
   name: string;
   duration: Duration;
+  remainDuration:Duration | undefined;
   startAt?: number;
   endAt?: number;
   isRunning: boolean;
+  isPausing: boolean;
 }
 
 export type Timer = {
