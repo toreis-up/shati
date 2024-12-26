@@ -1,7 +1,7 @@
 {
-  "name": "@shati/types",
+  "name": "utils",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/types/src",
+  "sourceRoot": "libs/utils/src",
   "projectType": "library",
   "tags": [],
   "targets": {
@@ -9,17 +9,17 @@
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/types",
-        "main": "libs/types/src/index.ts",
-        "tsConfig": "libs/types/tsconfig.lib.json",
-        "assets": ["libs/types/*.md"]
+        "outputPath": "dist/libs/utils",
+        "main": "libs/utils/src/index.ts",
+        "tsConfig": "libs/utils/tsconfig.lib.json",
+        "assets": ["libs/utils/*.md"]
       }
     },
     "test": {
       "executor": "@nx/vite:test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "../../coverage/libs/types"
+        "reportsDirectory": "../../coverage/libs/utils"
       }
     }
   }

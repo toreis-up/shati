@@ -1,13 +1,18 @@
 <template>
-  <li>
-    <ul v-for="item in timers">
-      <p>{{ item.name }}</p>
-    </ul>
-  </li>
+  <ClientOnly>
+    <div class="grid grid-cols-12 gap-4 p-5 pointer-events-auto">
+      <Timer v-for="timer in timers" :timer="timer" :key="timer.id" />
+    </div>
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">
-const datas = await fetch('http://localhost:8787/timer')
-const json = await datas.json()
-const timers = json.timers
+import { useTimerListStore } from '../../store/useTimerListStore';
+
+const { timers, fetchTimers } = useTimerListStore();
+
+await useAsyncData('timerList', () => fetchTimers());
 </script>
+
+<style>
+</style>

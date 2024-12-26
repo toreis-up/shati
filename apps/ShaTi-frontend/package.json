@@ -10,9 +10,16 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxtjs/tailwindcss": "6.12.2",
+    "@pinia/nuxt": "0.9.0",
+    "@vueuse/core": "^12.0.0",
     "nuxt": "^3.14.1592",
     "pinia": "^2.3.0",
     "vue": "latest",
     "vue-router": "latest"
+  },
+  "devDependencies": {
+    "@egoist/tailwindcss-icons": "^1.8.2",
+    "@iconify-json/mdi": "^1.2.2"
   }
 }

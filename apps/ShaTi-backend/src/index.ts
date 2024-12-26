@@ -1,16 +1,18 @@
-import { Hono } from "hono";
-import { Timer, TimerDurableObjects } from "./timer";
-import { createMiddleware } from "hono/factory";
+import { Hono } from 'hono';
+import { TimerDurableObjects } from './timer';
+import { DOTimer } from '@shati/types';
+import { createMiddleware } from 'hono/factory';
+import { cors } from 'hono/cors';
 
 type Env = {
   Bindings: {
     TIMERS: DurableObjectNamespace<TimerDurableObjects>;
   };
   Variables: {
-    timer: Timer;
-    timers: Timer[];
+    timer: DOTimer;
+    timers: DOTimer[];
     stub: DurableObjectStub<TimerDurableObjects>;
-    TIMER_ID: string
+    TIMER_ID: string;
   };
 };
 
@@ -19,37 +21,45 @@ const app = new Hono<Env>();
 const durableObjectMiddleware = createMiddleware<Env>(async (c, next) => {
   const id = c.env.TIMERS.idFromName(c.var.TIMER_ID);
   const stub = c.env.TIMERS.get(id);
-  c.set("stub", stub)
+  c.set('stub', stub);
   await next();
-})
-
-app.get("/", (c) => {
-  return c.text("Hello Hono!");
 });
 
-app.get("/timer", durableObjectMiddleware, async (c) => {
-  const timers = await c.var.stub.list()
-  return c.json({'timers': [...timers]})
-})
+app.get('/', (c) => {
+  return c.text('Hello Hono!');
+});
 
-app.post("/timer", durableObjectMiddleware, async (c) => {
-  const timer_obj = await c.req.json()
-  console.log(timer_obj.title)
-  const new_timer = await c.var.stub.create(timer_obj.name, timer_obj.duration)
+app.get('/timer', durableObjectMiddleware, cors(), async (c) => {
+  const timers = await c.var.stub.list();
+  return c.json({ timers: [...timers] });
+});
 
-  return c.json({'timer': new_timer})
-})
+app.post('/timer', durableObjectMiddleware, cors(), async (c) => {
+  const timer_obj = await c.req.json();
+  console.log(timer_obj.title);
+  const new_timer = await c.var.stub.create(timer_obj.name, timer_obj.duration);
 
-app.get(
-  "/ws",
-  (c) => {
-    const id = c.env.TIMERS.idFromName("timers");
-    const connection = c.env.TIMERS.get(id);
+  return c.json({ timer: new_timer });
+});
 
-    return connection.fetch(c.req.raw);
-  }
-);
+app.get('/timer/:id', durableObjectMiddleware, cors(), async (c) => {
+  const timerId = await c.req.param('id');
 
-export { TimerDurableObjects,};
+  const timer = await c.var.stub.getTimer(timerId);
+  return c.json(timer);
+});
+
+app.get('/timer/:id/connect', durableObjectMiddleware, async (c) => {
+  return c.var.stub.fetch(c.req.raw);
+});
+
+app.get('/ws', (c) => {
+  const id = c.env.TIMERS.idFromName('timers');
+  const connection = c.env.TIMERS.get(id);
+
+  return connection.fetch(c.req.raw);
+});
+
+export { TimerDurableObjects };
 
 export default app;
