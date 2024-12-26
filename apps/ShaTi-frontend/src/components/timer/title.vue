@@ -1,15 +1,15 @@
 <template>
   <div
-    class="relative w-full max-w-xs overflow-hidden font-bold text-xl"
+    class="relative w-full overflow-hidden font-bold text-xl"
     @mouseenter="startHover"
     @mouseleave="stopHover"
   >
-    <span class="block truncate" :title="title">
+    <span class="block truncate" :class="autoScroll ? 'opacity-0' : 'opacity-100'" :title="title">
       {{ title }}
     </span>
 
     <div
-      class="absolute inset-0 flex items-center overflow-hidden opacity-0 hover:opacity-100 bg-lime-200"
+      class="absolute inset-0 flex items-center overflow-hidden opacity-0 " :class="bgClass"
     >
       <span
         class="inline-block whitespace-nowrap"
@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-const { title, scrollSpeed } = defineProps({
+const { title, scrollSpeed, backgroundClass, autoScroll } = defineProps({
   title: {
     type: String,
     default: 'No Title',
@@ -34,7 +34,21 @@ const { title, scrollSpeed } = defineProps({
     type: Number,
     default: 60,
   },
+  backgroundClass: {
+    type: String,
+    default: ''
+  },
+  autoScroll: {
+    type: Boolean,
+    default: false
+  }
 });
+
+const bgClass = computed(() => {
+  let str = backgroundClass
+  str += autoScroll ? 'opacity-100' : ' hover:opacity-100 '
+  return str
+})
 
 const scrollableText = ref(null);
 const parentContainer = ref(null);
@@ -68,7 +82,7 @@ onMounted(() => {
   window.addEventListener('resize', checkScroll);
 });
 const scrollStyle = computed(() => {
-  if (isHovered.value) {
+  if (isHovered.value || autoScroll) {
     return {
       animation: `${scrollDuration.value}s linear infinite scroll-horizontal-loop`,
     };
