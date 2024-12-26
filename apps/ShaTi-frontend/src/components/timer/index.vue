@@ -5,7 +5,7 @@
     :class="timer.isRunning ? 'bg-sky-200 text-blue-800': 'bg-lime-200 text-green-800'"
   >
     <div class="flex flex-col">
-      <TimerTitle :title="timer.name" />
+      <TimerTitle :title="timer.name" :background-class="timer.isRunning ? 'bg-sky-200':'bg-lime-200'" />
       <TimerClock :duration="timer.duration" />
       <div
       class="absolute bottom-0 right-0 w-12 h-4/5"
