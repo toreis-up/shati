@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useTimerStore } from '../../store/useTimerStore';
+import { useTimerStore } from '../../../store/useTimerStore';
 
 const route = useRoute();
 const { timerId } = route.params;

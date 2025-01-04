@@ -2,7 +2,7 @@
   <div class="grid justify-center content-center h-screen">
     <TimerTitle :title="timer.name" auto-scroll />
     <TimerPageClock class="justify-self-center" :past="timer.endAt - now < 0" :duration="timer.isRunning ? timerRemain : timer.duration" />
-    <div class="flex justify-around pt-5">
+    <div class="flex justify-around pt-5" v-if="!viewonly">
       <TimerPageBtn @on-click="timer.isRunning ? onStop() : onStart()">{{ timer.isRunning ? 'Stop' : 'Start' }}</TimerPageBtn>
       <TimerPageBtn @on-click="timer.isPausing ? onResume() : onPause()" :disabled="!timer.isRunning" outlined>{{ timer.isPausing ? 'Resume' : 'Pause' }}</TimerPageBtn>
     </div>
@@ -79,11 +79,15 @@ const onResume = () => {
   emits('onResume')
 }
 
-const { timer } = defineProps({
+const { timer, viewonly } = defineProps({
   timer: {
     type: Object as PropType<Timer>,
     default: () => ({}),
   },
+  viewonly: {
+    type: Boolean,
+    default: false
+  }
 });
 
 refreshNow()
