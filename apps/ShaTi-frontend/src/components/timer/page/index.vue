@@ -14,12 +14,12 @@
 </template>
 
 <script setup lang="ts">
-const emits = defineEmits(['onStart', 'onStop', 'onPause', 'onResume'])
 import type { Timer } from '@shati/types';
+import { ref } from 'vue'
 import alarmUrl from '~/assets/alarm.mp3'
 import preAlarmUrl from '~/assets/pre-alarm.mp3'
 
-import {ref} from 'vue'
+const emits = defineEmits(['onStart', 'onStop', 'onPause', 'onResume'])
 
 const now = ref(0)
 const audio = ref<HTMLAudioElement | undefined>(undefined)
