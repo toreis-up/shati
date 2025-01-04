@@ -16,10 +16,12 @@
 <script setup lang="ts">
 const emits = defineEmits(['onStart', 'onStop', 'onPause', 'onResume'])
 import type { Timer } from '@shati/types';
+import alarmUrl from '~/assets/alarm.mp3'
 
 import {ref} from 'vue'
 
 const now = ref(0)
+const audio = ref<HTMLAudioElement | undefined>(undefined)
 
 const timerRemain = computed(() => {
   if (timer.isPausing) {
@@ -34,12 +36,27 @@ const timerRemain = computed(() => {
   }
 })
 
+const triggerAlarm = () => {
+  audio.value = new Audio(alarmUrl)
+  audio.value!.play();
+}
+
+watch(timerRemain, (newTimer, oldTimer) => {
+  if (newTimer.minutes * 60 + newTimer.seconds === 0) {
+    triggerAlarm();
+  }
+})
+
 const refreshNow = () => {
   now.value = Math.floor(Date.now() / 1000)
   setTimeout(refreshNow, 1000)
 }
 
 const onStop = () => {
+  if (audio.value){
+    audio.value.pause();
+    audio.value.currentTime = 0;
+  }
   emits('onStop')
 }
 const onStart = () => {
