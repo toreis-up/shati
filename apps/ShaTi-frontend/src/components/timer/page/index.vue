@@ -17,6 +17,7 @@
 const emits = defineEmits(['onStart', 'onStop', 'onPause', 'onResume'])
 import type { Timer } from '@shati/types';
 import alarmUrl from '~/assets/alarm.mp3'
+import preAlarmUrl from '~/assets/pre-alarm.mp3'
 
 import {ref} from 'vue'
 
@@ -41,9 +42,17 @@ const triggerAlarm = () => {
   audio.value!.play();
 }
 
+const triggerPreAlarm = () => {
+  audio.value = new Audio(preAlarmUrl)
+  audio.value!.play();
+}
+
 watch(timerRemain, (newTimer, oldTimer) => {
   if (newTimer.minutes * 60 + newTimer.seconds === 0) {
     triggerAlarm();
+  }
+  if (newTimer.minutes === 1 && newTimer.seconds === 0) {
+    triggerPreAlarm();
   }
 })
 
