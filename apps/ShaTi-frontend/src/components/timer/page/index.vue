@@ -4,7 +4,7 @@
     <TimerPageClock class="justify-self-center" :past="timer.endAt - now < 0" :duration="timer.isRunning ? timerRemain : timer.duration" />
     <div class="flex justify-around pt-5" v-if="!viewonly">
       <TimerPageBtn @on-click="timer.isRunning ? onStop() : onStart()">{{ timer.isRunning ? 'Stop' : 'Start' }}</TimerPageBtn>
-      <TimerPageBtn @on-click="timer.isPausing ? onResume() : onPause()" :disabled="!timer.isRunning" outlined>{{ timer.isPausing ? 'Resume' : 'Pause' }}</TimerPageBtn>
+      <TimerPageBtn @on-click="timer.isPausing ? onResume() : onPause()" :disabled="!timer.isRunning" color="tartiary" outlined>{{ timer.isPausing ? 'Resume' : 'Pause' }}</TimerPageBtn>
     </div>
     <div class="flex h-screen absolute justify-self-end self-end items-end">
       <!-- なんかいい感じにしたい -->
