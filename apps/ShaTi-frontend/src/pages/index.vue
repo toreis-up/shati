@@ -1,6 +1,6 @@
 <template>
   <div>
-    なにもないよ
+    <Home />
   </div>
 </template>
 
