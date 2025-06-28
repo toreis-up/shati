@@ -16,8 +16,8 @@
 <script setup lang="ts">
 import type { Timer } from '@shati/types';
 import { ref } from 'vue'
-import alarmUrl from '~/assets/alarm.mp3'
-import preAlarmUrl from '~/assets/pre-alarm.mp3'
+const alarmUrl = new URL('/alarm.mp3', import.meta.url).href
+const preAlarmUrl = new URL('/pre-alarm.mp3', import.meta.url).href
 
 const emits = defineEmits(['onStart', 'onStop', 'onPause', 'onResume'])
 
