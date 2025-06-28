@@ -28,6 +28,10 @@ Cloudflareがrepoを監視し、変更されたら勝手にビルドしてデプ
 言語: TypeScript
 Linter: （未導入, 将来的に導入を検討）
 
+なお、カラーテーマはNuxt UIにより、assets/css/main.cssにて定義しています。
+色を指定する前に、main.cssに書いてないか、Nuxt UIのテーマで実現可能でないかを確認してください。
+Nuxt UIのテーマ指定方法は[このページ](https://ui.nuxt.com/getting-started/theme)にかかれています。
+
 ### 2.2. Backend
 
 バックエンドです。
