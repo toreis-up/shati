@@ -3,7 +3,7 @@
     <div class="z-10">
       <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-4">タイムキーパーは<br>シャチに任せよう。</h1>
       <p class="text-base sm:text-lg mb-8">ShaTi /ˈʃɑːtʃi/ はオンラインでタイマーを共有できるツールです。<br>タイムキーパーだけがタイマーを監視する必要はもうありません。</p>
-      <UButton color="secondary" variant="solid" class="font-bold flex items-center">
+      <UButton to="/timer" color="secondary" variant="solid" class="font-bold inline-flex items-center">
         <span>使ってみる</span>
         <img src="~/assets/img/arrow.svg" alt="arrow" class="ml-2" />
       </UButton>

@@ -1,10 +1,10 @@
 <template>
   <header class="p-4 border-b border-primary-300">
     <div class="flex justify-between items-center max-w-[1440px] mx-auto">
-      <div class="flex items-center gap-2">
+      <NuxtLink to="/" class="flex items-center gap-2">
         <img src="~/assets/img/shati.svg" alt="ShaTi Logo" class="h-10 w-10" />
         <span class="text-xl font-bold">ShaTi</span>
-      </div>
+      </NuxtLink>
       <nav>
         <ul class="flex items-center space-x-4">
           <li>
