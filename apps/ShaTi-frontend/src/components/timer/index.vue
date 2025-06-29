@@ -4,8 +4,8 @@
     class="block relative rounded-lg px-3 py-1 flex-col xl:col-span-2 sm:col-span-4 col-span-6"
     :class="
       timer.isRunning
-        ? 'bg-(--ui-bg-elevated)'
-        : 'bg-(--ui-success-200) text-(--ui-success-800)'
+        ? 'bg-elevated'
+        : 'bg-success-200 text-success-800'
     "
   >
     <div class="flex flex-col">
@@ -13,8 +13,8 @@
         :title="timer.name"
         :background-class="
           timer.isRunning
-            ? 'bg-(--ui-bg-elevated)'
-            : 'bg-(--ui-success-200)'
+            ? 'bg-elevated'
+            : 'bg-success-200'
         "
       />
       <TimerClock :duration="timer.duration" />
@@ -22,8 +22,8 @@
         class="absolute bottom-0 right-0 w-12 h-4/5"
         :class="
           timer.isRunning
-            ? 'bg-(--ui-primary-300)'
-            : 'bg-(--ui-success-300)'
+            ? 'bg-primary-300'
+            : 'bg-success-300'
         "
         style="clip-path: polygon(100% 0, 100% 100%, 0 100%)"
       ></div>
