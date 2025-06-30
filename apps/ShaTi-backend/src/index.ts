@@ -29,6 +29,11 @@ app.get('/', (c) => {
   return c.text('Hello Hono!');
 });
 
+app.get('/time', cors(), (c) => {
+  return c.json({ time: Math.floor(Date.now() / 1000) });
+});
+
+
 app.get('/timer', durableObjectMiddleware, cors(), async (c) => {
   const timers = await c.var.stub.list();
   return c.json({ timers: [...timers] });
