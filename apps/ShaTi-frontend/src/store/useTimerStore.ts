@@ -57,10 +57,15 @@ export const useTimerStore = defineStore('timer', () => {
   }
 
   async function syncTime() {
-    const serverTimeResponse = await $fetch<TimeResponse>(
-      `${config.public.apiBase}/time`
-    );
-    timeOffset.value = serverTimeResponse.time - Math.floor(Date.now() / 1000);
+    try {
+      const serverTimeResponse = await $fetch<TimeResponse>(
+        `${config.public.apiBase}/time`
+      );
+      timeOffset.value = serverTimeResponse.time - Math.floor(Date.now() / 1000);
+    } catch (error) {
+      console.error("Failed to fetch server time, falling back to client time:", error);
+      timeOffset.value = 0; // Fallback to client time
+    }
   }
 
   function connect(timerId: TimerId) {
