@@ -2,7 +2,9 @@ import { defineStore } from 'pinia';
 import type { Timer, TimerId } from '@shati/types';
 
 type TimerResponse = Timer;
-
+type TimeResponse = {
+  time: number;
+};
 
 export const useTimerStore = defineStore('timer', () => {
   const config = useRuntimeConfig();
@@ -22,6 +24,7 @@ export const useTimerStore = defineStore('timer', () => {
   });
   const socket = ref<WebSocket>(null as unknown as WebSocket);
   const connected = ref(false);
+  const timeOffset = ref(0);
 
   function $reset() {
     timer.value = {
@@ -48,7 +51,21 @@ export const useTimerStore = defineStore('timer', () => {
     );
     timer.value = { ...timerResponse };
 
+    await syncTime();
+
     return timer.value;
+  }
+
+  async function syncTime() {
+    try {
+      const serverTimeResponse = await $fetch<TimeResponse>(
+        `${config.public.apiBase}/time`
+      );
+      timeOffset.value = serverTimeResponse.time - Math.floor(Date.now() / 1000);
+    } catch (error) {
+      console.error("Failed to fetch server time, falling back to client time:", error);
+      timeOffset.value = 0; // Fallback to client time
+    }
   }
 
   function connect(timerId: TimerId) {
@@ -83,7 +100,6 @@ export const useTimerStore = defineStore('timer', () => {
   }
 
   async function start() {
-    console.log('hi');
     if (!timer.value.id) {
       return;
     }
@@ -93,7 +109,6 @@ export const useTimerStore = defineStore('timer', () => {
   }
 
   async function stop() {
-    console.log('hi');
     if (!timer.value.id) {
       return;
     }
@@ -103,7 +118,6 @@ export const useTimerStore = defineStore('timer', () => {
   }
 
   async function pause() {
-    console.log('hi');
     if (!timer.value.id) {
       return;
     }
@@ -113,7 +127,6 @@ export const useTimerStore = defineStore('timer', () => {
   }
 
   async function resume() {
-    console.log('hi');
     if (!timer.value.id) {
       return;
     }
@@ -130,5 +143,5 @@ export const useTimerStore = defineStore('timer', () => {
     }
   }
 
-  return { timer, fetchTimer, connect, disconnect, start, stop, pause, resume };
+  return { timer, fetchTimer, connect, disconnect, start, stop, pause, resume, timeOffset };
 });
