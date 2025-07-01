@@ -8,6 +8,6 @@
         <img src="~/assets/img/arrow.svg" alt="arrow" class="ml-2" />
       </UButton>
     </div>
-    <img src="~/assets/img/shati_lp_black.webp" alt="ShaTi LP Image" class="absolute right-0 top-1/2 -translate-y-1/2 z-0 w-[576px] opacity-50 lg:opacity-100 transition-opacity duration-500 ease-in" style="transform: scale(-1,1); object-fit: cover;" />
+    <NuxtImg src="/images/shati_lp_black.webp" alt="ShaTi LP Image" class="absolute right-0 top-1/2 -translate-y-1/2 z-0 w-[576px] opacity-50 lg:opacity-100 transition-opacity duration-500 ease-in" style="transform: scale(-1,1); object-fit: cover;" />
   </UContainer>
 </template>
