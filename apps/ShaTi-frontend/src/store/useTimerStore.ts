@@ -80,7 +80,7 @@ export const useTimerStore = defineStore('timer', () => {
 
     socket.value.onmessage = (event) => {
       const data = JSON.parse(event.data.toString());
-      if (data.hasOwnProperty('maintain')) {
+      if (Object.prototype.hasOwnProperty.call(data, 'maintain')) {
         console.log('WebSocket maintain :)');
       } else timer.value = data;
     };

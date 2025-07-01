@@ -2,15 +2,27 @@
   "installation": {
     "version": "20.2.2"
   },
+  "workspaceLayout": {
+    "appsDir": "apps",
+    "libsDir": "libs"
+  },
   "targetDefaults": {
     "@nx/js:tsc": {
       "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["default", "^default"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "default",
+        "^default"
+      ]
     },
     "@nx/vite:test": {
       "cache": true,
-      "inputs": ["default", "^default"]
+      "inputs": [
+        "default",
+        "^default"
+      ]
     }
   },
   "plugins": [

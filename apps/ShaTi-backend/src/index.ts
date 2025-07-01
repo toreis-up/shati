@@ -54,25 +54,25 @@ app.get('/timer/:id', durableObjectMiddleware, cors(), async (c) => {
   return c.json(timer);
 });
 
-app.post('/timer/:id/start', durableObjectMiddleware, cors(), async (c, next) => {
+app.post('/timer/:id/start', durableObjectMiddleware, cors(), async (c) => {
   const timerId = await c.req.param('id');
 
   return c.json(await c.var.stub.startTimer(timerId))
 })
 
-app.post('/timer/:id/resume', durableObjectMiddleware, cors(), async (c, next) => {
+app.post('/timer/:id/resume', durableObjectMiddleware, cors(), async (c) => {
   const timerId = await c.req.param('id');
 
   return c.json(await c.var.stub.resumeTimer(timerId));
 });
 
-app.post('/timer/:id/stop', durableObjectMiddleware, cors(), async (c, next) => {
+app.post('/timer/:id/stop', durableObjectMiddleware, cors(), async (c) => {
   const timerId = await c.req.param('id');
 
   return c.json(await c.var.stub.stopTimer(timerId))
 });
 
-app.post('/timer/:id/pause', durableObjectMiddleware, cors(), async (c, next) => {
+app.post('/timer/:id/pause', durableObjectMiddleware, cors(), async (c) => {
   const timerId = await c.req.param('id');
 
   return c.json(await c.var.stub.pauseTimer(timerId))

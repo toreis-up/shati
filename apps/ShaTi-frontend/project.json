@@ -14,6 +14,15 @@
         "command": "yarn build",
         "cwd": "apps/ShaTi-frontend"
       }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": [
+          "apps/ShaTi-frontend/**/*.ts",
+          "apps/ShaTi-frontend/**/*.vue"
+        ]
+      }
     }
   }
 }
