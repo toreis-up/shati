@@ -56,7 +56,7 @@ export class TimerDurableObjects extends DurableObject {
     });
   }
 
-  async webSocketMessage(ws: WebSocket, message: ArrayBuffer | string) {
+  async webSocketMessage(ws: WebSocket) {
     // ws.send(
     //   `[Durable Object] msg ${message}, connections: ${
     //     this.ctx.getWebSockets().length
@@ -68,9 +68,7 @@ export class TimerDurableObjects extends DurableObject {
 
   async webSocketClose(
     ws: WebSocket,
-    code: number,
-    reason: string,
-    wasClean: boolean
+    code: number
   ) {
     // If the client closes the connection, the runtime will invoke the webSocketClose() handler.
     const timerId = this.ctx.getTags(ws)[0];
@@ -120,9 +118,9 @@ export class TimerDurableObjects extends DurableObject {
     const newTimer: DOTimer = {
       name: name || 'no name timer',
       duration: duration,
-      remainDuration: undefined,
-      startAt: undefined,
-      endAt: undefined,
+      remainDuration: duration,
+      startAt: 0,
+      endAt: 0,
       isRunning: false,
       isPausing: false,
     };
@@ -147,8 +145,8 @@ export class TimerDurableObjects extends DurableObject {
     cf_timer.startAt = this.nowSecond();
     cf_timer.endAt =
       this.nowSecond() +
-      60 * cf_timer.duration!.minutes +
-      cf_timer.duration!.seconds;
+      60 * (cf_timer.duration?.minutes || 0) +
+      (cf_timer.duration?.seconds || 0);
     cf_timer.isRunning = true;
     cf_timer.isPausing = false;
     await this.ctx.storage.put(id, cf_timer);
@@ -179,8 +177,8 @@ export class TimerDurableObjects extends DurableObject {
     cf_timer.startAt = this.nowSecond();
     cf_timer.endAt =
       this.nowSecond() +
-      60 * cf_timer.remainDuration!.minutes +
-      cf_timer.remainDuration!.seconds;
+      60 * (cf_timer.remainDuration?.minutes || 0) +
+      (cf_timer.remainDuration?.seconds || 0);
     cf_timer.isPausing = false;
     await this.ctx.storage.put(id, cf_timer);
 
@@ -192,7 +190,7 @@ export class TimerDurableObjects extends DurableObject {
   async pauseTimer(id: TimerId) {
     const cf_timer = await this.getTimer(id);
 
-    const remain = cf_timer.endAt! - this.nowSecond();
+    const remain = (cf_timer.endAt || 0) - this.nowSecond();
     const remainObj = {
       minutes: remain < 0 ? Math.ceil(remain / 60) : Math.floor(remain / 60),
       seconds: remain % 60,

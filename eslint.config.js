@@ -5,7 +5,14 @@ module.exports = [
   ...nx.configs['flat/typescript'],
   ...nx.configs['flat/javascript'],
   {
-    ignores: ['**/dist'],
+    ignores: [
+      '**/dist',
+      'apps/ShaTi-frontend/.nuxt/**',
+      'apps/ShaTi-frontend/.output/**',
+      'apps/ShaTi-frontend/backend/**',
+      'apps/ShaTi-frontend/dev/**',
+      'apps/ShaTi-backend/.wrangler/**',
+    ],
   },
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
@@ -14,7 +21,7 @@ module.exports = [
         'error',
         {
           enforceBuildableLibDependency: true,
-          allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?js$'],
+          allow: ['^.*/eslint(\.base)?\.config\.[cm]?js$'],
           depConstraints: [
             {
               sourceTag: '*',

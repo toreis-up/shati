@@ -1,5 +1,5 @@
 import { URL, fileURLToPath } from "node:url";
-import ui from '@nuxt/ui/vite';
+
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
