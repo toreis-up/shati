@@ -24,3 +24,21 @@ AIエージェントは自立してコーディング、提案、ドキュメン
 なにか行動を起こす前に、何をするのかをユーザーに説明してください。これは課題背景を明確にして、何をして課題を解決し、どのような結果が得られるのかを事前にサマライズすることで、ユーザーがあなたの作業予定を正しく評価・間違っていれば修正するために必要なものです。
 
 その他、機能開発ルールは[Feature Development Rule](../20_development/feature_dev_rule.md)を、コミットルールは[Commit Rule](../20_development/commit_rule.md)を参照してください。
+
+## 2. Commit Method
+
+Windows環境において、`git commit -m` コマンドで複数行のコミットメッセージや特殊文字を含むメッセージを直接渡すと、シェルが正しく解釈できずにコミットが失敗する場合があります。
+
+これを回避し、確実なコミットを行うためには、以下の `git commit -F` コマンドを使用してください。
+
+1. コミットメッセージを一時ファイルに書き込む。
+
+    ```bash
+    write_file(content = "<コミットメッセージ>", file_path = ".git/COMMIT_EDITMSG_TEMP")
+    ```
+
+2. 一時ファイルを指定してコミットを実行する。
+
+    ```bash
+    run_shell_command(command = "git commit -F .git/COMMIT_EDITMSG_TEMP", description = "Create a commit using the message from the temporary file.")
+    ```
