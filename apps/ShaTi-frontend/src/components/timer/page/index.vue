@@ -14,7 +14,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import type { Timer } from '@shati/types';
+import { ref, computed, watch, onMounted, onUnmounted, type PropType } from 'vue'
+
 const alarmUrl = '/audio/alarm.mp3'
 const preAlarmUrl = '/audio/pre-alarm.mp3'
 
@@ -23,13 +25,7 @@ const emits = defineEmits(['onStart', 'onStop', 'onPause', 'onResume'])
 const now = ref(0)
 const alarmSound = ref<HTMLAudioElement | undefined>(undefined)
 const preAlarmSound = ref<HTMLAudioElement | undefined>(undefined)
-
-onMounted(() => {
-  alarmSound.value = new Audio(alarmUrl)
-  alarmSound.value.load()
-  preAlarmSound.value = new Audio(preAlarmUrl)
-  preAlarmSound.value.load()
-})
+let rafId: number | null = null;
 
 const timerRemain = computed(() => {
   if (timer.isPausing) {
@@ -53,18 +49,35 @@ const triggerPreAlarm = () => {
 }
 
 watch(timerRemain, (newTimer, oldTimer) => {
-  if (newTimer.minutes * 60 + newTimer.seconds === 0) {
+  const oldTotalSeconds = oldTimer.minutes * 60 + oldTimer.seconds;
+  const newTotalSeconds = newTimer.minutes * 60 + newTimer.seconds;
+
+  if (oldTotalSeconds > 0 && newTotalSeconds <= 0) {
     triggerAlarm();
   }
-  if (newTimer.minutes === 1 && newTimer.seconds === 0) {
+  if (oldTotalSeconds > 60 && newTotalSeconds <= 60) {
     triggerPreAlarm();
   }
 })
 
-const refreshNow = () => {
+const tick = () => {
   now.value = Math.floor(Date.now() / 1000)
-  setTimeout(refreshNow, 1000)
+  rafId = requestAnimationFrame(tick)
 }
+
+onMounted(() => {
+  alarmSound.value = new Audio(alarmUrl)
+  alarmSound.value.load()
+  preAlarmSound.value = new Audio(preAlarmUrl)
+  preAlarmSound.value.load()
+  tick()
+})
+
+onUnmounted(() => {
+  if (rafId) {
+    cancelAnimationFrame(rafId)
+  }
+})
 
 const onStop = () => {
   alarmSound.value?.pause()
@@ -94,6 +107,4 @@ const { timer, viewonly } = defineProps({
     default: false
   }
 });
-
-refreshNow()
 </script>
