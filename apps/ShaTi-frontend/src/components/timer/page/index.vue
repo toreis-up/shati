@@ -14,15 +14,22 @@
 </template>
 
 <script setup lang="ts">
-import type { Timer } from '@shati/types';
-import { ref } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 const alarmUrl = '/audio/alarm.mp3'
 const preAlarmUrl = '/audio/pre-alarm.mp3'
 
 const emits = defineEmits(['onStart', 'onStop', 'onPause', 'onResume'])
 
 const now = ref(0)
-const audio = ref<HTMLAudioElement | undefined>(undefined)
+const alarmSound = ref<HTMLAudioElement | undefined>(undefined)
+const preAlarmSound = ref<HTMLAudioElement | undefined>(undefined)
+
+onMounted(() => {
+  alarmSound.value = new Audio(alarmUrl)
+  alarmSound.value.load()
+  preAlarmSound.value = new Audio(preAlarmUrl)
+  preAlarmSound.value.load()
+})
 
 const timerRemain = computed(() => {
   if (timer.isPausing) {
@@ -38,13 +45,11 @@ const timerRemain = computed(() => {
 })
 
 const triggerAlarm = () => {
-  audio.value = new Audio(alarmUrl)
-  audio.value!.play();
+  alarmSound.value?.play()
 }
 
 const triggerPreAlarm = () => {
-  audio.value = new Audio(preAlarmUrl)
-  audio.value!.play();
+  preAlarmSound.value?.play()
 }
 
 watch(timerRemain, (newTimer, oldTimer) => {
@@ -62,10 +67,10 @@ const refreshNow = () => {
 }
 
 const onStop = () => {
-  if (audio.value){
-    audio.value.pause();
-    audio.value.currentTime = 0;
-  }
+  alarmSound.value?.pause()
+  if (alarmSound.value) alarmSound.value.currentTime = 0
+  preAlarmSound.value?.pause()
+  if (preAlarmSound.value) preAlarmSound.value.currentTime = 0
   emits('onStop')
 }
 const onStart = () => {
