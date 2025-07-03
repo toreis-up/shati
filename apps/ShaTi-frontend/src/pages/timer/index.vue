@@ -7,9 +7,12 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { useTimerListStore } from '../../store/useTimerListStore';
 
-const { timers, fetchTimers } = useTimerListStore();
+const timerListStore = useTimerListStore();
+const { timers } = storeToRefs(timerListStore);
+const { fetchTimers } = timerListStore;
 
 await useAsyncData('timerList', () => fetchTimers());
 </script>
