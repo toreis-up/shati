@@ -43,20 +43,44 @@ const timerRemain = computed(() => {
   }
 })
 
-const tick = () => {
-  now.value = Math.floor(Date.now() / 1000);
-  const remainingSeconds = timer.endAt - now.value;
+const triggerAlarm = () => {
+  if (alarmSound.value) {
+    alarmSound.value.currentTime = 0; // 再生位置を先頭に戻す
+    alarmSound.value.play().catch(error => {
+      console.error("Failed to play alarm sound:", error);
+      console.warn("This might be due to browser autoplay policies. User interaction might be required.");
+    });
+  }
+}
 
+const triggerPreAlarm = () => {
+  if (preAlarmSound.value) {
+    preAlarmSound.value.currentTime = 0; // 再生位置を先頭に戻す
+    preAlarmSound.value.play().catch(error => {
+      console.error("Failed to play pre-alarm sound:", error);
+      console.warn("This might be due to browser autoplay policies. User interaction might be required.");
+    });
+  }
+}
+
+const tick = () => {
+  const prevNow = now.value; // 前回のnowの値を保存
+  now.value = Math.floor(Date.now() / 1000);
+
+  // タイマーが実行中で一時停止中でない場合のみアラームをチェック
   if (timer.isRunning && !timer.isPausing) {
-    // Pre-alarm check
-    if (remainingSeconds <= 60 && !preAlarmTriggered) {
-      preAlarmSound.value?.play();
+    const prevRemainingSeconds = timer.endAt - prevNow;
+    const currentRemainingSeconds = timer.endAt - now.value;
+
+    // Pre-alarm check: 60秒の閾値を「超えた瞬間」に鳴らす
+    if (prevRemainingSeconds > 60 && currentRemainingSeconds <= 60 && !preAlarmTriggered) {
+      triggerPreAlarm();
       preAlarmTriggered = true;
     }
 
-    // Final alarm check
-    if (remainingSeconds <= 0 && !alarmTriggered) {
-      alarmSound.value?.play();
+    // Final alarm check: 0秒の閾値を「超えた瞬間」に鳴らす
+    if (prevRemainingSeconds > 0 && currentRemainingSeconds <= 0 && !alarmTriggered) {
+      triggerAlarm();
       alarmTriggered = true;
     }
   }
@@ -66,15 +90,39 @@ const tick = () => {
 
 onMounted(() => {
   alarmSound.value = new Audio(alarmUrl)
-  alarmSound.value.load()
   preAlarmSound.value = new Audio(preAlarmUrl)
+
+  // Load both sounds
+  alarmSound.value.load()
   preAlarmSound.value.load()
+
+  const initialRemainingSeconds = timer.endAt - Math.floor(Date.now() / 1000);
+
+  // 読み込み時に残り時間が60秒以下であれば、プレアラームは鳴らさない
+  if (initialRemainingSeconds <= 60) {
+    preAlarmTriggered = true;
+  }
+
+  // 読み込み時に残り時間が0秒以下であれば、メインアラームは鳴らさない
+  if (initialRemainingSeconds <= 0) {
+    alarmTriggered = true;
+  }
+
   tick()
 })
 
 onUnmounted(() => {
   if (rafId) {
     cancelAnimationFrame(rafId)
+  }
+  // アラーム音を停止し、再生位置をリセット
+  if (alarmSound.value) {
+    alarmSound.value.pause();
+    alarmSound.value.currentTime = 0;
+  }
+  if (preAlarmSound.value) {
+    preAlarmSound.value.pause();
+    preAlarmSound.value.currentTime = 0;
   }
 })
 
