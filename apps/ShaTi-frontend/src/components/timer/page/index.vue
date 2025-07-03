@@ -26,6 +26,8 @@ const now = ref(0)
 const alarmSound = ref<HTMLAudioElement | undefined>(undefined)
 const preAlarmSound = ref<HTMLAudioElement | undefined>(undefined)
 let rafId: number | null = null;
+let preAlarmTriggered = false;
+let alarmTriggered = false;
 
 const timerRemain = computed(() => {
   if (timer.isPausing) {
@@ -34,35 +36,32 @@ const timerRemain = computed(() => {
       seconds: Math.abs(timer.remainDuration?.seconds)
     }
   }
+  const remainingSeconds = timer.endAt - now.value;
   return {
-    minutes: (timer.endAt - now.value) < 0 ? Math.ceil((timer.endAt - now.value)  / 60) : Math.floor((timer.endAt - now.value)  / 60),
-    seconds: Math.abs((timer.endAt - now.value) % 60)
-  }
-})
-
-const triggerAlarm = () => {
-  alarmSound.value?.play()
-}
-
-const triggerPreAlarm = () => {
-  preAlarmSound.value?.play()
-}
-
-watch(timerRemain, (newTimer, oldTimer) => {
-  const oldTotalSeconds = oldTimer.minutes * 60 + oldTimer.seconds;
-  const newTotalSeconds = newTimer.minutes * 60 + newTimer.seconds;
-
-  if (oldTotalSeconds > 0 && newTotalSeconds <= 0) {
-    triggerAlarm();
-  }
-  if (oldTotalSeconds > 60 && newTotalSeconds <= 60) {
-    triggerPreAlarm();
+    minutes: remainingSeconds < 0 ? Math.ceil(remainingSeconds / 60) : Math.floor(remainingSeconds / 60),
+    seconds: Math.abs(remainingSeconds % 60)
   }
 })
 
 const tick = () => {
-  now.value = Math.floor(Date.now() / 1000)
-  rafId = requestAnimationFrame(tick)
+  now.value = Math.floor(Date.now() / 1000);
+  const remainingSeconds = timer.endAt - now.value;
+
+  if (timer.isRunning && !timer.isPausing) {
+    // Pre-alarm check
+    if (remainingSeconds <= 60 && !preAlarmTriggered) {
+      preAlarmSound.value?.play();
+      preAlarmTriggered = true;
+    }
+
+    // Final alarm check
+    if (remainingSeconds <= 0 && !alarmTriggered) {
+      alarmSound.value?.play();
+      alarmTriggered = true;
+    }
+  }
+
+  rafId = requestAnimationFrame(tick);
 }
 
 onMounted(() => {
@@ -84,9 +83,15 @@ const onStop = () => {
   if (alarmSound.value) alarmSound.value.currentTime = 0
   preAlarmSound.value?.pause()
   if (preAlarmSound.value) preAlarmSound.value.currentTime = 0
+  // Reset alarm flags
+  preAlarmTriggered = false;
+  alarmTriggered = false;
   emits('onStop')
 }
 const onStart = () => {
+  // Reset alarm flags
+  preAlarmTriggered = false;
+  alarmTriggered = false;
   emits('onStart')
 }
 const onPause = () => {
