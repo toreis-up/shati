@@ -12,9 +12,8 @@ import { useTimerListStore } from '../../store/useTimerListStore';
 
 const timerListStore = useTimerListStore();
 const { timers } = storeToRefs(timerListStore);
-const { fetchTimers } = timerListStore;
 
-await useAsyncData('timerList', () => fetchTimers());
+await useAsyncData('timerList', () => timerListStore.fetchTimers());
 </script>
 
 <style>
