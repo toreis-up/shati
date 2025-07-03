@@ -9,6 +9,9 @@ export default defineNuxtConfig({
   modules: ['@nuxt/ui', '@pinia/nuxt', '@nuxt/image'],
   image: {
     format: ['webp'],
+    ...(process.env.NODE_ENV === 'production'
+      ? { domains: ['shati.reisan.dev', 'api.shati.reisan.dev'] }
+      : {}),
   },
   css: ['assets/css/main.css'],
   runtimeConfig: {
