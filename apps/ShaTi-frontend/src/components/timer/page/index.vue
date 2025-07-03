@@ -113,7 +113,8 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (rafId) {
-    cancelAnimationFrame(rafId)
+    cancelAnimationFrame(rafId);
+    rafId = null; // Reset rafId to null to avoid stale IDs
   }
   // アラーム音を停止し、再生位置をリセット
   if (alarmSound.value) {
