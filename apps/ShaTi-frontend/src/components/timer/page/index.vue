@@ -86,12 +86,28 @@ const onStop = () => {
   // Reset alarm flags
   preAlarmTriggered = false;
   alarmTriggered = false;
+
+  // requestAnimationFrame ループを即座に停止
+  if (rafId) {
+    cancelAnimationFrame(rafId);
+    rafId = null; // IDをクリア
+  }
+
   emits('onStop')
 }
 const onStart = () => {
   // Reset alarm flags
-  preAlarmTriggered = false;
   alarmTriggered = false;
+
+  // タイマーの初期設定時間が60秒以下の場合、preAlarmTriggeredをtrueに設定し、プレアラームが鳴らないようにする
+  const initialTotalSeconds = timer.duration.minutes * 60 + timer.duration.seconds;
+  preAlarmTriggered = initialTotalSeconds <= 60;
+
+  // requestAnimationFrame ループが停止している場合のみ再開
+  if (!rafId) {
+    tick();
+  }
+
   emits('onStart')
 }
 const onPause = () => {
