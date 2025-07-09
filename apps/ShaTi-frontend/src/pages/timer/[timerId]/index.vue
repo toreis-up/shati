@@ -1,25 +1,26 @@
 <template>
-    <TimerPage :timer="fetchedTimer" @onStart="start" @on-pause="pause" @on-stop="stop" @on-resume="resume"></TimerPage>
+    <TimerPage :timer="timer" @onStart="start" @on-pause="pause" @on-stop="stop" @on-resume="resume"></TimerPage>
 </template>
 
 <script lang="ts" setup>
-import { useTimerStore } from '../../../store/useTimerStore';
+import { storeToRefs } from 'pinia';
 
 const route = useRoute();
 const { timerId } = route.params;
 
-const { connect, fetchTimer, disconnect, start, pause, stop, resume } = useTimerStore()
+const timerStore = useTimerStore();
+const { connect, fetchTimer, disconnect, start, pause, stop, resume } = timerStore;
+const { timer } = storeToRefs(timerStore);
 
-const { timer } = storeToRefs(useTimerStore())
+// サーバーサイドでもデータをフェッチする
+const { data: timerData } = await useAsyncData(() => fetchTimer(timerId.toString()));
+timer.value = timerData;
 
-const fetchedTimer = computed(() => {return timer.value})
-
-onMounted(async() => {
-  await fetchTimer(timerId.toString())
-  connect(timerId.toString())
-})
+onMounted(() => {
+  connect(timerId.toString());
+});
 
 onBeforeUnmount(() => {
-  disconnect()
-})
+  disconnect();
+});
 </script>
