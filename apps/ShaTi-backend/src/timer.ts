@@ -149,6 +149,7 @@ export class TimerDurableObjects extends DurableObject {
       (cf_timer.duration?.seconds || 0);
     cf_timer.isRunning = true;
     cf_timer.isPausing = false;
+    cf_timer.remainDuration = undefined;
     await this.ctx.storage.put(id, cf_timer);
 
     await this.multicast(id, JSON.stringify(cf_timer));
