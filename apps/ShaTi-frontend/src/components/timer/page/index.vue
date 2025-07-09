@@ -16,11 +16,15 @@
 <script setup lang="ts">
 import type { Timer } from '@shati/types';
 import { ref, computed, watch, onMounted, onUnmounted, type PropType } from 'vue'
+import { storeToRefs } from 'pinia';
 
 const alarmUrl = '/audio/alarm.mp3'
 const preAlarmUrl = '/audio/pre-alarm.mp3'
 
 const emits = defineEmits(['onStart', 'onStop', 'onPause', 'onResume'])
+
+const timerStore = useTimerStore();
+const { timeOffset } = storeToRefs(timerStore);
 
 const now = ref(0)
 const alarmSound = ref<HTMLAudioElement | undefined>(undefined)
@@ -65,7 +69,7 @@ const triggerPreAlarm = () => {
 
 const tick = () => {
   const prevNow = now.value; // 前回のnowの値を保存
-  now.value = Math.floor(Date.now() / 1000);
+  now.value = Math.floor(Date.now() / 1000) + timeOffset.value;
 
   // タイマーが実行中で一時停止中でない場合のみアラームをチェック
   if (timer.isRunning && !timer.isPausing) {
