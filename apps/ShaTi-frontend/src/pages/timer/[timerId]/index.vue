@@ -13,7 +13,8 @@ const { connect, fetchTimer, disconnect, start, pause, stop, resume } = timerSto
 const { timer } = storeToRefs(timerStore);
 
 // サーバーサイドでもデータをフェッチする
-await fetchTimer(timerId.toString());
+const { data: timerData } = await useAsyncData(() => fetchTimer(timerId.toString()));
+timer.value = timerData;
 
 onMounted(() => {
   connect(timerId.toString());
