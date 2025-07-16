@@ -24,7 +24,7 @@ repoマネージャー: Nx
 Cloudflare Pagesに上げることを前提に組まれています。
 Cloudflareがrepoを監視し、変更されたら勝手にビルドしてデプロイしてくれます。
 
-技術スタック: Nuxt.js v3, Nuxt UI v3, Pinia
+技術スタック: Nuxt.js v4, Nuxt UI v3, Pinia
 言語: TypeScript
 Linter: （未導入, 将来的に導入を検討）
 
