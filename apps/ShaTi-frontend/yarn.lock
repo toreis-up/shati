@@ -856,6 +856,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource-variable/noto-sans-jp@npm:^5.2.6":
+  version: 5.2.6
+  resolution: "@fontsource-variable/noto-sans-jp@npm:5.2.6"
+  checksum: 10c0/fc8be87ac2cc8ed90c5cc7e085dad3d827313a4469598f2dc4eadb6fbb4cb12063147b15f5e1213ff89d2213cc59bd496b77feca058d9a63ddb369e212d02834
+  languageName: node
+  linkType: hard
+
 "@iconify-json/mdi@npm:^1.2.3":
   version: 1.2.3
   resolution: "@iconify-json/mdi@npm:1.2.3"
@@ -7843,6 +7850,7 @@ __metadata:
   resolution: "nuxt-app@workspace:."
   dependencies:
     "@egoist/tailwindcss-icons": "npm:^1.9.0"
+    "@fontsource-variable/noto-sans-jp": "npm:^5.2.6"
     "@iconify-json/mdi": "npm:^1.2.3"
     "@nuxt/image": "npm:^1.0.0"
     "@nuxt/ui": "npm:^3.1.3"

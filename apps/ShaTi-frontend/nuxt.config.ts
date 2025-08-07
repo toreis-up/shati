@@ -21,8 +21,7 @@ export default defineNuxtConfig({
     },
   },
   fonts: {
-    provider: 'google',
-    families: [{ name: 'Noto Sans JP', provider: 'google' }],
+    families: [{ name: 'Noto Sans JP Variable', provider: 'fontsource' }],
   },
   ui: {
     theme: {
