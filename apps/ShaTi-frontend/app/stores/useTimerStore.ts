@@ -8,6 +8,11 @@ type TimeResponse = {
 
 export const useTimerStore = defineStore('timer', () => {
   const config = useRuntimeConfig();
+
+  // Accepts only alphanumeric IDs, dashes, and underscores (adjust as needed)
+  function isValidTimerId(id: string): boolean {
+    return typeof id === 'string' && /^[a-zA-Z0-9_-]+$/.test(id);
+  }
   const timer = ref<Timer>({
     id: '',
     name: '',
@@ -100,7 +105,7 @@ export const useTimerStore = defineStore('timer', () => {
   }
 
   async function start() {
-    if (!timer.value.id) {
+    if (!timer.value.id || !isValidTimerId(timer.value.id)) {
       return;
     }
     await fetch(`${config.public.apiBase}/timer/${timer.value.id}/start`, {
@@ -109,7 +114,7 @@ export const useTimerStore = defineStore('timer', () => {
   }
 
   async function stop() {
-    if (!timer.value.id) {
+    if (!timer.value.id || !isValidTimerId(timer.value.id)) {
       return;
     }
     await fetch(`${config.public.apiBase}/timer/${timer.value.id}/stop`, {
@@ -118,7 +123,7 @@ export const useTimerStore = defineStore('timer', () => {
   }
 
   async function pause() {
-    if (!timer.value.id) {
+    if (!timer.value.id || !isValidTimerId(timer.value.id)) {
       return;
     }
     await fetch(`${config.public.apiBase}/timer/${timer.value.id}/pause`, {
@@ -127,7 +132,7 @@ export const useTimerStore = defineStore('timer', () => {
   }
 
   async function resume() {
-    if (!timer.value.id) {
+    if (!timer.value.id || !isValidTimerId(timer.value.id)) {
       return;
     }
     await fetch(`${config.public.apiBase}/timer/${timer.value.id}/resume`, {
