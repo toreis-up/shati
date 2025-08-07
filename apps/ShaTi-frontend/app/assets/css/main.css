@@ -1,8 +1,9 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+@import '@fontsource-variable/noto-sans-jp';
 
 @theme static {
-  --font-sans: 'Noto Sans JP', sans-serif;
+  --font-sans: 'Noto Sans JP Variable', sans-serif;
   --color-orca-50: #e0e8f3; /* text */
   --color-orca-100: #bccee6;
   --color-orca-200: #98b5d9; /* tertiary */
