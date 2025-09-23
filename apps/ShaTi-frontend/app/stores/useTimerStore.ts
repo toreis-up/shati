@@ -148,5 +148,28 @@ export const useTimerStore = defineStore('timer', () => {
     }
   }
 
-  return { timer, fetchTimer, connect, disconnect, start, stop, pause, resume, timeOffset };
+  async function createTimer() {
+    $reset();
+
+    try {
+      const timerResponse = await $fetch<TimerResponse>(`${config.public.apiBase}/timer`, {
+        method: 'POST',
+        body: {
+          name: 'New Timer',
+          duration: {
+            minutes: 5,
+            seconds: 0,
+          },
+        }
+      })
+
+      timer.value = { ...timerResponse };
+    } catch (e: any) {
+      console.error('Failed to create timer:', e);
+    }
+
+    return timer.value
+  }
+
+  return { timer, fetchTimer, connect, disconnect, start, stop, pause, resume, timeOffset, createTimer };
 });
