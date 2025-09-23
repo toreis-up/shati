@@ -7,6 +7,7 @@ import { cors } from 'hono/cors';
 type Env = {
   Bindings: {
     TIMERS: DurableObjectNamespace<TimerDurableObjects>;
+    NODE_ENV: 'development' | 'production' | 'test';
   };
   Variables: {
     timer: DOTimer;
@@ -17,6 +18,15 @@ type Env = {
 };
 
 const app = new Hono<Env>();
+
+app.use('*', async (c, next) => {
+  await cors({
+    origin: ['https://shati.reisan.dev', ...(c.env.NODE_ENV === 'development' ? ['http://localhost:3000'] : [])],
+    allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowHeaders: ['Content-Type'],
+  });
+  await next();
+});
 
 const durableObjectMiddleware = createMiddleware<Env>(async (c, next) => {
   const id = c.env.TIMERS.idFromName(c.var.TIMER_ID);
@@ -44,8 +54,22 @@ app.post('/timer', durableObjectMiddleware, cors(), async (c) => {
   console.log(timer_obj.title);
   const new_timer = await c.var.stub.create(timer_obj.name, timer_obj.duration);
 
-  return c.json({ timer: new_timer });
+  return c.json(new_timer);
 });
+
+app.put('/timer/:id', durableObjectMiddleware, cors(), async (c) => {
+  const timerId = await c.req.param('id');
+
+  const timer = await c.var.stub.getTimer(timerId);
+  if (!timer) {
+    return c.json({ error: 'Timer not found' }, 404);
+  }
+
+  const updatedData = await c.req.json();
+  const updatedTimer = await c.var.stub.update(timerId, updatedData);
+
+  return c.json(updatedTimer);
+})
 
 app.get('/timer/:id', durableObjectMiddleware, cors(), async (c) => {
   const timerId = await c.req.param('id');

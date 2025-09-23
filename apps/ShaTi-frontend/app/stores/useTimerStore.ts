@@ -46,7 +46,7 @@ export const useTimerStore = defineStore('timer', () => {
       isRunning: false,
       isPausing: false,
     };
-    socket.value = null as unknown as WebSocket;
+    socket.value = null as unknown as WebSocket; // TODO: 型もみ消すのやめる
     connected.value = false;
   }
 
@@ -94,7 +94,7 @@ export const useTimerStore = defineStore('timer', () => {
       console.error(error);
     };
 
-    setTimeout(() => maintainWS(), 1000);
+    setTimeout(() => maintainWS(), 5000);
   }
 
   function maintainWS() {
@@ -148,5 +148,49 @@ export const useTimerStore = defineStore('timer', () => {
     }
   }
 
-  return { timer, fetchTimer, connect, disconnect, start, stop, pause, resume, timeOffset };
+  async function createTimer() {
+    $reset();
+
+    try {
+      const timerResponse = await $fetch<TimerResponse>(`${config.public.apiBase}/timer`, {
+        method: 'POST',
+        body: {
+          name: 'New Timer',
+          duration: {
+            minutes: 5,
+            seconds: 0,
+          },
+        }
+      })
+
+      timer.value = { ...timerResponse };
+    } catch (e: any) {
+      console.error('Failed to create timer:', e);
+    }
+
+    return timer.value
+  }
+
+  async function updateTimer(updateData: Timer) {
+    if (!updateData.id || !isValidTimerId(updateData.id)) {
+      throw new Error('Invalid timer ID');
+    }
+
+    try {
+      const updatedTimer = await $fetch<TimerResponse>(`${config.public.apiBase}/timer/${updateData.id}`, {
+        method: 'PUT',
+        body: {
+          name: updateData.name,
+          duration: updateData.duration,
+        }
+      });
+      timer.value = { ...updatedTimer };
+    } catch (e: any) {
+      console.error('Failed to update timer:', e);
+    }
+
+    return timer.value;
+  }
+
+  return { timer, fetchTimer, connect, disconnect, start, stop, pause, resume, timeOffset, createTimer, updateTimer };
 });

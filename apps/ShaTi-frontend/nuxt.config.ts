@@ -31,7 +31,7 @@ export default defineNuxtConfig({
         'tartiary',
         'text',
         'success',
-        'warn',
+        'warning',
         'error',
         'neutral',
       ],

@@ -132,6 +132,20 @@ export class TimerDurableObjects extends DurableObject {
     return { id, ...newTimer };
   }
 
+  async update(id: TimerId, updatedData: Partial<Exclude<DOTimer, 'id'>>) {
+    const cf_timer = await this.ctx.storage.get<DOTimer>(id);
+    if (!cf_timer) {
+      throw new Error('Timer not found');
+    }
+
+    const updatedTimer = { ...cf_timer, ...updatedData };
+    await this.ctx.storage.put(id, updatedTimer);
+
+    await this.multicast(id, JSON.stringify(updatedTimer));
+
+    return { id, ...updatedTimer };
+  }
+
   async getTimer(id: TimerId) {
     const cf_timer = await this.ctx.storage.get<DOTimer>(id);
     const timer = { id, ...cf_timer };
