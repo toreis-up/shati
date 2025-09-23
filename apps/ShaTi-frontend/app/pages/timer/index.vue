@@ -1,16 +1,32 @@
 <template>
-  <div class="grid grid-cols-12 gap-4 p-5 pointer-events-auto">
-    <Timer v-for="timer in timers" :key="timer.id" :timer="timer" />
+  <div class="flex flex-col h-full">
+    <div class="flex-1 flex flex-col items-center justify-center">
+      <div class="text-4xl sm:text-6xl md:text-9xl font-extrabold mb-10 duration-100 ease-in-out">Creating...</div>
+      <div class="text-xl md:text-2xl text-slate-500">Please wait a moment</div>
+    </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import { storeToRefs } from 'pinia';
+<script lang="ts" setup>
+const { createTimer } = useTimerStore();
 
-const timerListStore = useTimerListStore();
-const { timers } = storeToRefs(timerListStore);
-const { fetchTimers } = timerListStore;
+const {
+  data: timer
+} = await useAsyncData(
+  async () => {
+    const createdTimer = await createTimer();
+    console.log(createdTimer);
 
-await useAsyncData(() => fetchTimers());
+    return createdTimer;
+  },
+  {
+    server: true,
+  }
+);
 
+if (timer.value && timer.value.id) {
+  await navigateTo(`/timer/${timer.value.id}`, {
+    replace: true,
+  });
+}
 </script>

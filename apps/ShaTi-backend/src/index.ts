@@ -44,10 +44,10 @@ app.get('/time', cors(), (c) => {
 });
 
 
-app.get('/timer', durableObjectMiddleware, cors(), async (c) => {
-  const timers = await c.var.stub.list();
-  return c.json({ timers: [...timers] });
-});
+// app.get('/timer', durableObjectMiddleware, cors(), async (c) => {
+//   const timers = await c.var.stub.list();
+//   return c.json({ timers: [...timers] });
+// });
 
 app.post('/timer', durableObjectMiddleware, cors(), async (c) => {
   const timer_obj = await c.req.json();

@@ -5,15 +5,6 @@
         <NuxtImg src="/images/shati.svg" alt="ShaTi Logo" class="h-10 w-10" />
         <span class="text-xl font-bold">ShaTi</span>
       </NuxtLink>
-      <nav>
-        <ul class="flex items-center space-x-4">
-          <li>
-            <a href="#" class="hover:text-gray-400">
-              <NuxtImg src="/images/folder-clock-outline.svg" alt="History" class="h-8 w-8" />
-            </a>
-          </li>
-        </ul>
-      </nav>
     </div>
   </header>
 </template>
