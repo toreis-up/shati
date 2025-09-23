@@ -19,14 +19,17 @@ type Env = {
 
 const app = new Hono<Env>();
 
-app.use('*', async (c, next) => {
-  await cors({
-    origin: ['https://shati.reisan.dev', ...(c.env.NODE_ENV === 'development' ? ['http://localhost:3000'] : [])],
+app.use('*', cors((c) => {
+  const isDev = c.env.NODE_ENV === 'development';
+  return {
+    origin: [
+      'https://shati.reisan.dev',
+      ...(isDev ? ['http://localhost:3000'] : [])
+    ],
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type'],
-  });
-  await next();
-});
+  };
+}));
 
 const durableObjectMiddleware = createMiddleware<Env>(async (c, next) => {
   const id = c.env.TIMERS.idFromName(c.var.TIMER_ID);
@@ -39,25 +42,29 @@ app.get('/', (c) => {
   return c.text('Hello Hono!');
 });
 
-app.get('/time', cors(), (c) => {
+app.get('/time', (c) => {
   return c.json({ time: Math.floor(Date.now() / 1000) });
 });
 
 
-// app.get('/timer', durableObjectMiddleware, cors(), async (c) => {
+// app.get('/timer', durableObjectMiddleware, async (c) => {
 //   const timers = await c.var.stub.list();
 //   return c.json({ timers: [...timers] });
 // });
 
-app.post('/timer', durableObjectMiddleware, cors(), async (c) => {
+app.post('/timer', durableObjectMiddleware, async (c) => {
   const timer_obj = await c.req.json();
   console.log(timer_obj.title);
   const new_timer = await c.var.stub.create(timer_obj.name, timer_obj.duration);
 
   return c.json(new_timer);
 });
+app.options('/timer', (c) => {
+  return c.json({}); // CORS preflight対応
+});
 
-app.put('/timer/:id', durableObjectMiddleware, cors(), async (c) => {
+
+app.put('/timer/:id', durableObjectMiddleware, async (c) => {
   const timerId = await c.req.param('id');
 
   const timer = await c.var.stub.getTimer(timerId);
@@ -71,32 +78,32 @@ app.put('/timer/:id', durableObjectMiddleware, cors(), async (c) => {
   return c.json(updatedTimer);
 })
 
-app.get('/timer/:id', durableObjectMiddleware, cors(), async (c) => {
+app.get('/timer/:id', durableObjectMiddleware, async (c) => {
   const timerId = await c.req.param('id');
 
   const timer = await c.var.stub.getTimer(timerId);
   return c.json(timer);
 });
 
-app.post('/timer/:id/start', durableObjectMiddleware, cors(), async (c) => {
+app.post('/timer/:id/start', durableObjectMiddleware, async (c) => {
   const timerId = await c.req.param('id');
 
   return c.json(await c.var.stub.startTimer(timerId))
 })
 
-app.post('/timer/:id/resume', durableObjectMiddleware, cors(), async (c) => {
+app.post('/timer/:id/resume', durableObjectMiddleware, async (c) => {
   const timerId = await c.req.param('id');
 
   return c.json(await c.var.stub.resumeTimer(timerId));
 });
 
-app.post('/timer/:id/stop', durableObjectMiddleware, cors(), async (c) => {
+app.post('/timer/:id/stop', durableObjectMiddleware, async (c) => {
   const timerId = await c.req.param('id');
 
   return c.json(await c.var.stub.stopTimer(timerId))
 });
 
-app.post('/timer/:id/pause', durableObjectMiddleware, cors(), async (c) => {
+app.post('/timer/:id/pause', durableObjectMiddleware, async (c) => {
   const timerId = await c.req.param('id');
 
   return c.json(await c.var.stub.pauseTimer(timerId))
