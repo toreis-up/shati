@@ -1,5 +1,5 @@
 <template>
-    <TimerPage :timer="timer" @onStart="start" @on-pause="pause" @on-stop="stop" @on-resume="resume"></TimerPage>
+    <TimerPage :timer="timer" @onEdit="edit" @onStart="start" @on-pause="pause" @on-stop="stop" @on-resume="resume" />
 </template>
 
 <script lang="ts" setup>
@@ -13,6 +13,12 @@ const { connect, fetchTimer, disconnect, start, pause, stop, resume } = timerSto
 const { timer } = storeToRefs(timerStore);
 
 await useAsyncData(() => fetchTimer(timerId.toString()));
+
+const edit = async () => {
+  if (timer.value) {
+    await timerStore.updateTimer(timer.value);
+  }
+}
 
 onMounted(() => {
   connect(timerId.toString());

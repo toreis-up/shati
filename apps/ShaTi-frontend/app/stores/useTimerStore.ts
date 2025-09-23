@@ -171,5 +171,26 @@ export const useTimerStore = defineStore('timer', () => {
     return timer.value
   }
 
-  return { timer, fetchTimer, connect, disconnect, start, stop, pause, resume, timeOffset, createTimer };
+  async function updateTimer(updateData: Timer) {
+    if (!updateData.id || !isValidTimerId(updateData.id)) {
+      throw new Error('Invalid timer ID');
+    }
+
+    try {
+      const updatedTimer = await $fetch<TimerResponse>(`${config.public.apiBase}/timer/${updateData.id}`, {
+        method: 'PUT',
+        body: {
+          name: updateData.name,
+          duration: updateData.duration,
+        }
+      });
+      timer.value = { ...updatedTimer };
+    } catch (e: any) {
+      console.error('Failed to update timer:', e);
+    }
+
+    return timer.value;
+  }
+
+  return { timer, fetchTimer, connect, disconnect, start, stop, pause, resume, timeOffset, createTimer, updateTimer };
 });
