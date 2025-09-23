@@ -46,7 +46,7 @@ export const useTimerStore = defineStore('timer', () => {
       isRunning: false,
       isPausing: false,
     };
-    socket.value = null as unknown as WebSocket;
+    socket.value = null as unknown as WebSocket; // TODO: 型もみ消すのやめる
     connected.value = false;
   }
 
@@ -94,7 +94,7 @@ export const useTimerStore = defineStore('timer', () => {
       console.error(error);
     };
 
-    setTimeout(() => maintainWS(), 1000);
+    setTimeout(() => maintainWS(), 5000);
   }
 
   function maintainWS() {
