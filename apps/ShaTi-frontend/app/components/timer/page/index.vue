@@ -2,6 +2,7 @@
   <div class="h-full flex flex-col">
     <div class="mx-5">
       <UiTextInput
+        class="max-w-full"
         v-model="timer.name"
         @onInput="onEdit"
         placeholder="TIMER NAME"
