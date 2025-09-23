@@ -81,6 +81,7 @@ export const useTimerStore = defineStore('timer', () => {
 
     socket.value.onopen = () => {
       connected.value = true;
+      syncTime();
     };
 
     socket.value.onmessage = (event) => {

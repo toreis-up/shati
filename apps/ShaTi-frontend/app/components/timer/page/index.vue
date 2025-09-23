@@ -54,7 +54,7 @@ const emits = defineEmits([
 const timerStore = useTimerStore();
 const { timeOffset } = storeToRefs(timerStore);
 
-const now = ref(0);
+const now = ref(Math.floor(Date.now() / 1000) + timeOffset.value);
 const alarmSound = ref<HTMLAudioElement | undefined>(undefined);
 const preAlarmSound = ref<HTMLAudioElement | undefined>(undefined);
 let rafId: number | null = null;
@@ -137,6 +137,63 @@ const tick = () => {
   }
 
   rafId = requestAnimationFrame(tick);
+};
+
+watch(
+  () => timer.isRunning,
+  (newIsRunning, oldIsRunning) => {
+    if (!oldIsRunning && newIsRunning) {
+      // タイマーが開始された場合
+      resetAlarmFlags();
+      // 現在時刻を同期
+      now.value = Math.floor(Date.now() / 1000) + timeOffset.value;
+
+      if (!rafId) {
+        tick();
+      }
+    } else if (oldIsRunning && !newIsRunning) {
+      // タイマーが停止された場合 (他人操作でも)
+      stopAlarmSounds();
+      resetAlarmFlags();
+
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    }
+  },
+  { immediate: false }
+);
+
+watch(
+  () => timer.endAt,
+  () => {
+    if (timer.isRunning) {
+      resetAlarmFlags();
+      // 現在時刻を同期
+      now.value = Math.floor(Date.now() / 1000) + timeOffset.value;
+    }
+  }
+);
+
+const resetAlarmFlags = () => {
+  const currentTime = Math.floor(Date.now() / 1000) + timeOffset.value;
+  const remainingSeconds = timer.endAt - currentTime;
+  
+  // 残り時間に基づいてフラグを適切に設定
+  preAlarmTriggered = remainingSeconds <= 60;
+  alarmTriggered = remainingSeconds <= 0;
+};
+
+const stopAlarmSounds = () => {
+  if (alarmSound.value) {
+    alarmSound.value.pause();
+    alarmSound.value.currentTime = 0;
+  }
+  if (preAlarmSound.value) {
+    preAlarmSound.value.pause();
+    preAlarmSound.value.currentTime = 0;
+  }
 };
 
 onMounted(() => {
