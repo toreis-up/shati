@@ -87,6 +87,18 @@
   --color-error-800: #45101a;
   --color-error-900: #23060A;
   --color-error-950: #200002;
+
+  --color-black-50: #0F0F0F;
+  --color-black-100: #222222;
+  --color-black-200: #363636;
+  --color-black-300: #4A4A4A;
+  --color-black-400: #5F5F5F;
+  --color-black-500: #767676;
+  --color-black-600: #8D8D8D;
+  --color-black-700: #A5A5A5;
+  --color-black-800: #BDBDBD;
+  --color-black-900: #D6D6D6;
+  --color-black-950: #F0F0F0;
 }
 
 :root {
@@ -103,7 +115,7 @@
   --ui-color-primary-900: var(--color-orca-900);
   --ui-color-primary-950: var(--color-orca-950);
 
-  --ui-secondary: var(--color-secondary-300);
+  --ui-secondary: var(--color-secondary-600);
   --ui-color-secondary-50: var(--color-secondary-50);
   --ui-color-secondary-100: var(--color-secondary-100);
   --ui-color-secondary-200: var(--color-secondary-200);
@@ -129,7 +141,7 @@
   --ui-color-tertiary-900: var(--color-tertiary-900);
   --ui-color-tertiary-950: var(--color-tertiary-950);
 
-  --ui-text: var(--color-text-800);
+  --ui-text: var(--color-text-950);
   --ui-color-text-50: var(--color-text-50);
   --ui-color-text-100: var(--color-text-100);
   --ui-color-text-200: var(--color-text-200);
@@ -181,18 +193,18 @@
   --ui-color-error-900: var(--color-error-900);
   --ui-color-error-950: var(--color-error-950);
 
-  --ui-neutral: var(--color-text-500);
-  --ui-color-neutral-50: var(--color-text-50);
-  --ui-color-neutral-100: var(--color-text-100);
-  --ui-color-neutral-200: var(--color-text-200);
-  --ui-color-neutral-300: var(--color-text-300);
-  --ui-color-neutral-400: var(--color-text-400);
-  --ui-color-neutral-500: var(--color-text-500);
-  --ui-color-neutral-600: var(--color-text-600);
-  --ui-color-neutral-700: var(--color-text-700);
-  --ui-color-neutral-800: var(--color-text-800);
-  --ui-color-neutral-900: var(--color-text-900);
-  --ui-color-neutral-950: var(--color-text-950);
+  --ui-neutral: var(--color-black-500);
+  --ui-color-neutral-50: var(--color-black-950);
+  --ui-color-neutral-100: var(--color-black-900);
+  --ui-color-neutral-200: var(--color-black-800);
+  --ui-color-neutral-300: var(--color-black-700);
+  --ui-color-neutral-400: var(--color-black-600);
+  --ui-color-neutral-500: var(--color-black-500);
+  --ui-color-neutral-600: var(--color-black-400);
+  --ui-color-neutral-700: var(--color-black-300);
+  --ui-color-neutral-800: var(--color-black-200);
+  --ui-color-neutral-900: var(--color-black-100);
+  --ui-color-neutral-950: var(--color-black-50);
 
   --ui-text-dimmed: var(--ui-color-neutral-200);
   --ui-text-muted: var(--ui-color-neutral-300);
@@ -200,13 +212,13 @@
   --ui-text-highlighted: var(--ui-color-neutral-700);
   --ui-text-inverted: var(--ui-color-neutral-50);
 
-  --ui-bg: var(--ui-color-primary-50);
+  --ui-bg: var(--ui-color-neutral-50);
   --ui-bg-muted: var(--ui-color-neutral-100);
   --ui-bg-elevated: var(--ui-color-neutral-200);
   --ui-bg-accented: var(--ui-color-neutral-300);
   --ui-bg-inverted: var(--ui-color-neutral-900);
 
-  --ui-border: var(--ui-color-primary-500);
+  --ui-border: var(--ui-color-neutral-500);
   --ui-border-muted: var(--ui-color-neutral-300);
   --ui-border-accented: var(--ui-color-neutral-400);
   --ui-border-inverted: var(--ui-color-neutral-900);
@@ -323,13 +335,13 @@
   --ui-text-highlighted: var(--ui-color-neutral-700);
   --ui-text-inverted: var(--ui-color-neutral-50);
 
-  --ui-bg: var(--ui-color-primary-50);
+  --ui-bg: var(--ui-color-neutral-50);
   --ui-bg-muted: var(--ui-color-neutral-100);
   --ui-bg-elevated: var(--ui-color-neutral-200);
   --ui-bg-accented: var(--ui-color-neutral-300);
   --ui-bg-inverted: var(--ui-color-neutral-900);
 
-  --ui-border: var(--ui-color-primary-500);
+  --ui-border: var(--ui-color-neutral-500);
   --ui-border-muted: var(--ui-color-neutral-300);
   --ui-border-accented: var(--ui-color-neutral-400);
   --ui-border-inverted: var(--ui-color-neutral-900);
