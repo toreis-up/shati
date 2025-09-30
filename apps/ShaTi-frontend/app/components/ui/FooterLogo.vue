@@ -1,13 +1,11 @@
 <template>
-  <div>
-    <NuxtImg
-      v-if="isMounted && colorMode === 'dark'"
-      src="/images/shati_lp_white.webp"
-      alt="ShaTi Logo"
-    />
-    <NuxtImg v-else-if="isMounted && colorMode === 'light'" src="/images/shati_lp_color.webp" alt="ShaTi Logo" />
-    <NuxtImg v-else src="/images/shati_lp_color.webp" alt="ShaTi Logo" />
-  </div>
+  <USkeleton v-if="!isMounted" class="rounded-full" />
+  <NuxtImg
+    v-else-if="colorMode === 'dark'"
+    src="/images/shati_lp_white.webp"
+    alt="ShaTi Logo"
+  />
+  <NuxtImg v-else src="/images/shati_lp_color.webp" alt="ShaTi Logo" />
 </template>
 
 <script lang="ts" setup>
