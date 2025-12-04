@@ -5,10 +5,10 @@
     "deploy": "wrangler deploy --minify"
   },
   "dependencies": {
-    "hono": "^4.7.11"
+    "hono": "^4.10.7"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250607.0",
-    "wrangler": "^4.19.1"
+    "@cloudflare/workers-types": "^4.20251202.0",
+    "wrangler": "^4.52.1"
   }
 }
