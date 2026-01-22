@@ -15,6 +15,20 @@
         "cwd": "apps/ShaTi-frontend"
       }
     },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm wrangler:deploy",
+        "cwd": "apps/ShaTi-frontend"
+      }
+    },
+    "non-prod-deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm wrangler:non-prod-deploy",
+        "cwd": "apps/ShaTi-frontend"
+      }
+    },
     "lint": {
       "executor": "nx-oxlint:lint"
     }

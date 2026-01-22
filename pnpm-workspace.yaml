@@ -1,6 +1,13 @@
+packages:
+  - apps/*
+
 onlyBuiltDependencies:
+  - '@parcel/watcher'
   - '@swc/core'
   - esbuild
   - nx
+  - sharp
+  - vue-demi
+  - workerd
 
 shamefullyHoist: true

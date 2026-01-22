@@ -1,39 +1,44 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-11-01',
+  compatibilityDate: "2026-01-22",
   devtools: { enabled: true },
-  modules: ['@nuxt/ui', '@pinia/nuxt', '@nuxt/image'],
+  modules: ["@nuxt/ui", "@pinia/nuxt", "@nuxt/image"],
   image: {
-    format: ['webp'],
-    ...(process.env.NODE_ENV === 'production'
-      ? { domains: ['shati.reisan.dev', 'api.shati.reisan.dev'] }
+    format: ["webp"],
+    ...(process.env.NODE_ENV === "production"
+      ? { domains: ["shati.reisan.dev", "api.shati.reisan.dev"] }
       : {}),
   },
-  css: ['assets/css/main.css'],
+  css: ["assets/css/main.css"],
   runtimeConfig: {
     public: {
-      apiBase: 'http://127.0.0.1:8787',
+      apiBase: "http://127.0.0.1:8787",
     },
   },
   nitro: {
+    preset: "cloudflare_module",
     prerender: {
       autoSubfolderIndex: false,
     },
+    cloudflare: {
+      deployConfig: true,
+      nodeCompat: true
+    }
   },
   fonts: {
-    families: [{ name: 'Noto Sans JP Variable', provider: 'fontsource' }],
+    families: [{ name: "Noto Sans JP Variable", provider: "fontsource" }],
   },
   ui: {
     theme: {
       colors: [
-        'primary',
-        'secondary',
-        'tartiary',
-        'text',
-        'success',
-        'warning',
-        'error',
-        'neutral',
+        "primary",
+        "secondary",
+        "tartiary",
+        "text",
+        "success",
+        "warning",
+        "error",
+        "neutral",
       ],
     },
   },
@@ -42,10 +47,10 @@ export default defineNuxtConfig({
       button: {
         compoundVariants: [
           {
-            color: 'primary',
-            variant: 'solid',
+            color: "primary",
+            variant: "solid",
             class:
-              'bg-secondary hover:bg-secondary/75 disabled:bg-primary aria-disabled:bg-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary',
+              "bg-secondary hover:bg-secondary/75 disabled:bg-primary aria-disabled:bg-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary",
           },
         ],
       },
