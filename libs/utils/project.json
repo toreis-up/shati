@@ -29,7 +29,7 @@
       }
     },
     "lint": {
-      "executor": "@nx/eslint:lint",
+      "executor": "nx-oxlint:lint",
       "options": {
         "lintFilePatterns": [
           "libs/utils/**/*.ts"

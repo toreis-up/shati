@@ -4,24 +4,19 @@
     "dev": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn dev",
+        "command": "pnpm dev",
         "cwd": "apps/ShaTi-backend"
       }
     },
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn build",
+        "command": "pnpm build",
         "cwd": "apps/ShaTi-backend"
       }
     },
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "options": {
-        "lintFilePatterns": [
-          "apps/ShaTi-backend/**/*.ts"
-        ]
-      }
+      "executor": "nx-oxlint:lint"
     }
   }
 }

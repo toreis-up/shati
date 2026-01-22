@@ -1,6 +1,6 @@
 {
   "installation": {
-    "version": "20.2.2"
+    "version": "22.4.0"
   },
   "workspaceLayout": {
     "appsDir": "apps",
@@ -27,10 +27,11 @@
   },
   "plugins": [
     {
-      "plugin": "@nx/eslint/plugin",
+      "plugin": "nx-oxlint",
       "options": {
-        "targetName": "lint"
+        "lintTargetName": "lint"
       }
     }
-  ]
+  ],
+  "$schema": "./node_modules/nx/schemas/nx-schema.json"
 }

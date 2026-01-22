@@ -79,9 +79,9 @@ export const useTimerStore = defineStore('timer', () => {
       `${config.public.apiBase}/timer/${timerId}/connect`
     );
 
-    socket.value.onopen = () => {
+    socket.value.onopen = async () => {
       connected.value = true;
-      syncTime();
+      await syncTime();
     };
 
     socket.value.onmessage = (event) => {

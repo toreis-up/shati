@@ -65,7 +65,7 @@ app.options('/timer', (c) => {
 
 
 app.put('/timer/:id', durableObjectMiddleware, async (c) => {
-  const timerId = await c.req.param('id');
+  const timerId = c.req.param('id');
 
   const timer = await c.var.stub.getTimer(timerId);
   if (!timer) {
@@ -79,32 +79,32 @@ app.put('/timer/:id', durableObjectMiddleware, async (c) => {
 })
 
 app.get('/timer/:id', durableObjectMiddleware, async (c) => {
-  const timerId = await c.req.param('id');
+  const timerId = c.req.param('id');
 
   const timer = await c.var.stub.getTimer(timerId);
   return c.json(timer);
 });
 
 app.post('/timer/:id/start', durableObjectMiddleware, async (c) => {
-  const timerId = await c.req.param('id');
+  const timerId = c.req.param('id');
 
   return c.json(await c.var.stub.startTimer(timerId))
 })
 
 app.post('/timer/:id/resume', durableObjectMiddleware, async (c) => {
-  const timerId = await c.req.param('id');
+  const timerId = c.req.param('id');
 
   return c.json(await c.var.stub.resumeTimer(timerId));
 });
 
 app.post('/timer/:id/stop', durableObjectMiddleware, async (c) => {
-  const timerId = await c.req.param('id');
+  const timerId = c.req.param('id');
 
   return c.json(await c.var.stub.stopTimer(timerId))
 });
 
 app.post('/timer/:id/pause', durableObjectMiddleware, async (c) => {
-  const timerId = await c.req.param('id');
+  const timerId = c.req.param('id');
 
   return c.json(await c.var.stub.pauseTimer(timerId))
 
