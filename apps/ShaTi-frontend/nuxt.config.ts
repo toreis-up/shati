@@ -5,15 +5,39 @@ export default defineNuxtConfig({
   modules: ["@nuxt/ui", "@pinia/nuxt", "@nuxt/image"],
   image: {
     format: ["webp"],
-    ...(process.env.NODE_ENV === "production"
-      ? { domains: ["shati.reisan.dev", "api.shati.reisan.dev"] }
-      : {}),
   },
   css: ["assets/css/main.css"],
-  runtimeConfig: {
-    public: {
-      apiBase: "http://127.0.0.1:8787",
+  $development: {
+    vite: {
+      optimizeDeps: {
+        include: [
+          '@vue/devtools-core',
+          '@vue/devtools-kit'
+        ]
+      }
     },
+    runtimeConfig: {
+      public: {
+        apiBase: "http://127.0.0.1:8787",
+      },
+    },
+  },
+  $production: {
+    runtimeConfig: {
+      public: {
+        apiBase: "https://api.shati.reisan.dev"
+      }
+    },
+    image: {
+      domains: ["shati.reisan.dev", "api.shati.reisan.dev"]
+    }
+  },
+  vite: {
+    optimizeDeps: {
+      include: [
+        '@vueuse/core'
+      ]
+    }
   },
   nitro: {
     preset: "cloudflare_module",

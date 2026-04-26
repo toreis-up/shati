@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full flex flex-col">
+  <div class="min-h-100 flex flex-col">
     <div class="mx-5">
       <UiTextInput
         class="max-w-full"
